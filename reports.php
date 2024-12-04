@@ -52,6 +52,10 @@
             </div>
         </div>
     </header>
+
+    <a href="userslist.php" class="btn btn-primary">See all the Users</a>
+    <a href="donationsList.php" class="btn btn-primary">See all Donation</a>
+    <a href="pickupDonation.php" class="btn btn-primary">Pickup Donation</a>
     
     <!-- Food Donation Report -->
     <div class="report  w-100">

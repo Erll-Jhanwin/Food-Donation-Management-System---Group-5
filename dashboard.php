@@ -195,18 +195,18 @@ $user = new User($db);
                             echo "<td>" .(isset($row['DateToPickup']) ? htmlspecialchars($row['DateToPickup']) : ''). "</td>";
                             echo "<td>" .(isset($row['DonateDateCreation']) ? htmlspecialchars($row['DonateDateCreation']) : ''). "</td>";
                             echo "<td>" .(isset($row['Status']) ? htmlspecialchars($row['Status']) : ''). "</td>";
-                            echo "<td><a href='delete.php?donation_id=" . $row['Id'] . "' id='link'>Delete</a></td>";
+                            echo "<td><a href='delete.php?donation_id=" . $row['Id'] . "' id='". $row['Id'] ."'>Delete</a></td>";
                             echo "<td><a href='update.php?id=" . $row['Id'] . "' id='link'>Pick it up</a></td>";
                             echo "</tr>";
                         }
                     }
-
                     ?>
-        
                 </tbody>
             </table><br>
         <a href="logout.php" class="btn btn-primary">Logout</a>
         </div>
     </div>
+
+    
 </body>
 </html>

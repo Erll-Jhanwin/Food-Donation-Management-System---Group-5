@@ -3,6 +3,7 @@ class User {
     private $conn;
     private $tbl_name = "usersdata";
     private $tbl_food = "foods";
+    private $tbl_admin = "admin";
 
     //for registration
     public $id;
@@ -173,6 +174,14 @@ class User {
             return true;
         }
         return false;
+    }
+
+    //retrieve data from the user table
+    public function readAdmin(){
+        $query = "SELECT * FROM " .$this->tbl_admin;
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt;
     }
 
 
