@@ -11,6 +11,7 @@ class User {
     public $email;
     public $phone;
     public $password;
+    public $address;
 
     //for food donation
     public $f_name;
@@ -23,6 +24,9 @@ class User {
     public $food_donator_name;
     public $donate_date_creation;
     public $status;
+    public $donatorAdd;
+    public $DonateTo;
+
     
 
     public function __construct($db) {
@@ -31,12 +35,13 @@ class User {
 
     //Query to insert user
     public function create() {
-        $query = "INSERT INTO " . $this->tbl_name . " (Name, Email, Phone, Password) VALUES (:name, :email, :phoneNum, :password)";
+        $query = "INSERT INTO " . $this->tbl_name . " (Name, Email, Phone, Password, Address) VALUES (:name, :email, :phoneNum, :password, :address)";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':name', $this->name);
         $stmt->bindParam(':email', $this->email);
         $stmt->bindParam(':phoneNum', $this->phoneNum);
         $stmt->bindParam(':password', $this->password);
+        $stmt->bindParam(':address', $this->address);
 
         if ($stmt->execute()) {
             return true;
@@ -46,7 +51,7 @@ class User {
 
     //Query to insert Donation
     public function createDonation() {
-        $query = "INSERT INTO " . $this->tbl_food . " (FoodName, MealType, FoodCategory, FoodQuantity, Email, PhoneNumber, DateToPickup, FoodDonatorName, DonateDateCreation, Status) VALUES (:f_name, :Meal_type, :f_category, :f_quantity, :u_email, :phone, :date_pickup, :food_donator_name, :donate_date_creation, :status)";
+        $query = "INSERT INTO " . $this->tbl_food . " (FoodName, MealType, FoodCategory, FoodQuantity, Email, PhoneNumber, DateToPickup, FoodDonatorName, DonateDateCreation, Status, DonatorLocation, DeliverTo) VALUES (:f_name, :Meal_type, :f_category, :f_quantity, :u_email, :phone, :date_pickup, :food_donator_name, :donate_date_creation, :status, :donator_loc, :deliverto)";
        
         $stmt = $this->conn->prepare($query);
 
@@ -60,6 +65,8 @@ class User {
         $stmt->bindParam(':food_donator_name', $this->food_donator_name);
         $stmt->bindParam(':donate_date_creation', $this->donate_date_creation);
         $stmt->bindParam(':status', $this->status);
+        $stmt->bindParam(':donator_loc', $this->donatorAdd);
+        $stmt->bindParam(':deliverto', $this->DonateTo);
 
         if ($stmt->execute()) {
             return true;
@@ -84,6 +91,15 @@ class User {
         $stmt->execute();
         return $stmt;
     }
+
+    public function readForDonationOrderDate(){
+        $query = "SELECT * FROM " . $this->tbl_food . " ORDER BY DateToPickup ASC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt;
+    }
+
+
 
     //login query
     public function login($email){
