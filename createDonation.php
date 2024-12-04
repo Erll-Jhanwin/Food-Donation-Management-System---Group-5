@@ -19,6 +19,8 @@
         // $user->donate_date_creation = date("Y-m-d");
         $user->donate_date_creation = htmlspecialchars(trim($_POST['date_create']));
         $user->status = "To pickup";
+        $user->donatorAdd = htmlspecialchars(trim($_POST['d_address']));
+        $user->DonateTo = htmlspecialchars(trim($_POST['donateTo_address']));
     
      }
 

@@ -11,6 +11,7 @@ $user = new User($db);
 $stmt = $user->readAdmin();
 $num = $stmt->rowCount();
 
+
 $username = htmlspecialchars(trim($_POST['username']));
 $password = htmlspecialchars(trim($_POST['password']));
 

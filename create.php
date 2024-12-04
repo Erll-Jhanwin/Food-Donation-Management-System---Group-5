@@ -14,6 +14,7 @@
         $user->email = htmlspecialchars(trim($_POST['email']));
         $user->phoneNum = htmlspecialchars(trim($_POST['phone']));
         $user->password = htmlspecialchars(trim($_POST['password']));
+        $user->address = htmlspecialchars(trim($_POST['Uaddress']));
      }
      
 

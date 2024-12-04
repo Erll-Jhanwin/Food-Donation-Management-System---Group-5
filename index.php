@@ -86,6 +86,11 @@ if(isset($_SESSION["email"])){
                 <label for="password">Password</label>
                 <input type="password" name="password" class="form-control" required/><br>
             </div>
+
+            <div class="form-group">
+                <label for="Uaddress">Your Address</label>
+                <input type="text" name="Uaddress" class="form-control" required/><br>
+            </div>
             <input type="submit" value="Register" class="btn btn-primary">
         </form>
     </div>
