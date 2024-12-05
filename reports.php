@@ -160,34 +160,34 @@
 
 
 
-                    echo '<table id="userTable3" class="display">';
-                    echo '<thead>';
-                    echo '<tr>';
-                    // echo '<th>ID</th>';
-                    echo '<th>Food Name</th>';
-                    echo '<th>Meal Type</th>';
-                    echo '<th>Food Category</th>';
-                    echo '<th>Food Quantity</th>';
-                    echo '<th>Date to Pickup</th>';
-                    echo '<th>Status</th>';
-                    echo '</tr>';
-                    echo '</thead>';
-                    echo '<tbody>';
+                    // echo '<table id="userTable3" class="display">';
+                    // echo '<thead>';
+                    // echo '<tr>';
+                    // // echo '<th>ID</th>';
+                    // echo '<th>Food Name</th>';
+                    // echo '<th>Meal Type</th>';
+                    // echo '<th>Food Category</th>';
+                    // echo '<th>Food Quantity</th>';
+                    // echo '<th>Date to Pickup</th>';
+                    // echo '<th>Status</th>';
+                    // echo '</tr>';
+                    // echo '</thead>';
+                    // echo '<tbody>';
 
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-                        echo "<tr>";
-                        // echo "<td>" . htmlspecialchars($row['Id']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['FoodName']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['MealType']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['FoodCategory']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['FoodQuantity']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['DateToPickup']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['Status']) . "</td>";
-                        echo "</tr>";
-                    }
+                    // while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                    //     echo "<tr>";
+                    //     // echo "<td>" . htmlspecialchars($row['Id']) . "</td>";
+                    //     echo "<td>" . htmlspecialchars($row['FoodName']) . "</td>";
+                    //     echo "<td>" . htmlspecialchars($row['MealType']) . "</td>";
+                    //     echo "<td>" . htmlspecialchars($row['FoodCategory']) . "</td>";
+                    //     echo "<td>" . htmlspecialchars($row['FoodQuantity']) . "</td>";
+                    //     echo "<td>" . htmlspecialchars($row['DateToPickup']) . "</td>";
+                    //     echo "<td>" . htmlspecialchars($row['Status']) . "</td>";
+                    //     echo "</tr>";
+                    // }
 
-                    echo '</tbody>';
-                    echo '</table>';
+                    // echo '</tbody>';
+                    // echo '</table>';
 
                     
                 } else {

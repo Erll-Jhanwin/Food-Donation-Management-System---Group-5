@@ -38,9 +38,55 @@
     </style>
 
     <script>
-        $(document).ready(function() {
-            $('#userTable2').DataTable();
+        // $(document).ready(function() {
+        //     $('#userTable2').DataTable();
+        // });
+
+    $(document).ready(function() {
+    $('#userTable2').DataTable();
+
+    // Handle delete link click
+    $('.delete-link').click(function(e) {
+        e.preventDefault();  // Prevent the default action (which is navigating to the URL)
+
+        var donationId = $(this).data('id');  // Get the donation ID from the data-id attribute
+
+        // Show a confirmation dialog using SweetAlert2
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Send AJAX request to delete the donation
+                $.ajax({
+                    url: 'delete.php',  // URL for the delete PHP file
+                    type: 'GET',
+                    data: { donation_id: donationId },  // Send the donation ID to the server
+                    success: function(response) {
+                        if (response === 'Success') {
+                            // If successful, remove the table row
+                            $('#donation_row_' + donationId).fadeOut(500, function() {
+                                $(this).remove();
+                            });
+                            Swal.fire('Deleted!', 'The donation has been deleted.', 'success');
+                        } else {
+                            Swal.fire('Error!', 'There was an issue deleting the donation.', 'error');
+                        }
+                    },
+                    error: function() {
+                        Swal.fire('Error!', 'There was an error with the request.', 'error');
+                    }
+                });
+            }
         });
+    });
+});
+
     </script>
 
 
@@ -63,7 +109,7 @@
 
     <!-- Table for Donation-->
     <div class="tables m-5 p-2" style="font-size:12px;">
-        <h2>List of food to Donate</h2>
+        <h2>List of food Donated</h2>
         <table id="userTable2" class="display">
             <thead>
                 <tr>
@@ -73,6 +119,7 @@
                     <th>Food Quantity</th>
                     <th>Date to Pickup</th>
                     <th>FoodDonatorName</th>
+                    <th>Deliver To</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -90,16 +137,18 @@
                 $num = $stmt->rowCount();
 
                 if($num > 0) {
+
                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-                        echo "<tr>";
+                        echo "<tr id='donation_row_" . $row['Id'] . "'>";  // Added the id attribute here
                         echo "<td>" .(isset($row['FoodName']) ? htmlspecialchars($row['FoodName']) : ''). "</td>";
                         echo "<td>" .(isset($row['MealType']) ? htmlspecialchars($row['MealType']) : ''). "</td>";
                         echo "<td>" .(isset($row['FoodCategory']) ? htmlspecialchars($row['FoodCategory']) : ''). "</td>";
                         echo "<td>" .(isset($row['FoodQuantity']) ? htmlspecialchars($row['FoodQuantity']) : ''). "</td>";
                         echo "<td>" .(isset($row['DateToPickup']) ? htmlspecialchars($row['DateToPickup']) : ''). "</td>";
                         echo "<td>" .(isset($row['FoodDonatorName']) ? htmlspecialchars($row['FoodDonatorName']) : ''). "</td>";
+                        echo "<td>" .(isset($row['DeliverTo']) ? htmlspecialchars($row['DeliverTo']) : ''). "</td>";
                         echo "<td>" .(isset($row['Status']) ? htmlspecialchars($row['Status']) : ''). "</td>";
-                        echo "<td><a href='delete.php?donation_id=" . $row['Id'] . "' id='link'>Delete</a></td>";
+                        echo "<td><a href='#' class='delete-link' data-id='" . $row['Id'] . "'>Delete</a></td>";  // Use data-id to store the donation ID
                         echo "</tr>";
                     }
                 }

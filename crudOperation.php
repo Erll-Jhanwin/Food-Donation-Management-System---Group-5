@@ -185,6 +185,14 @@ class User {
         return $result;
     }
 
+    //reading all the donation that already pickup
+    public function readPickup() {
+        $query = "SELECT * FROM " . $this->tbl_food . " WHERE Status='Already picked up'";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt;
+    }
+
     public function countMealTypeByMonth($month, $year) {
         // First query: Count pickups for the given name and email
         $query1 = "SELECT COUNT(*) FROM " . $this->tbl_food . " WHERE MealType='vegetables' AND MONTH(DonateDateCreation) = :month AND YEAR(DonateDateCreation) = :year";
@@ -215,15 +223,6 @@ class User {
             'fruits' => $fruits
         ];
     }
-    
-
-    // public function countPickupMonth() {
-    //     $query = "SELECT COUNT(*) FROM " . $this->tbl_food . " WHERE Status='Already picked up'";
-    //     $stmt = $this->conn->prepare($query);
-    //     $stmt->execute();
-    //     $result = $stmt->fetchColumn();
-    //     return $result;
-    // }
 
 
 

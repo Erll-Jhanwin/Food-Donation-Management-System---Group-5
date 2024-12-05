@@ -22,9 +22,53 @@
     <link rel="stylesheet" href="style.css">
 
     <script>
-        $(document).ready(function() {
-            $('#userTable').DataTable();
+
+$(document).ready(function() {
+    // Initialize DataTables
+    $('#userTable').DataTable();
+
+    // Handle click event for delete link
+    $('.delete-link').click(function(e) {
+        e.preventDefault();  // Prevent default link behavior
+
+        var userId = $(this).data('id');  // Get the user id from the data-id attribute
+
+        // Show SweetAlert confirmation
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Send AJAX request to delete.php
+                $.ajax({
+                    url: 'delete.php',  // PHP file that handles deletion
+                    type: 'GET',
+                    data: { id: userId },  // Send user_id as GET parameter
+                    success: function(response) {
+                        if (response === 'Success') {
+                            // Remove the table row
+                            $('#user_row_' + userId).fadeOut(500, function() {
+                                $(this).remove();
+                            });
+                            Swal.fire('Deleted!', 'The user has been deleted.', 'success');
+                        } else {
+                            Swal.fire('Error!', 'There was an issue deleting the user.', 'error');
+                        }
+                    },
+                    error: function() {
+                        Swal.fire('Error!', 'There was an error with the request.', 'error');
+                    }
+                });
+            }
         });
+    });
+});
+
 
       
     </script>
@@ -61,10 +105,10 @@
         <table id="userTable" class="display">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Password</th>
+                    <th>Address</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -82,12 +126,13 @@
 
                 if($num > 0) {
                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-                        echo "<tr>";
-                        echo "<td>" .(isset($row['Id']) ? htmlspecialchars($row['Id']) : ''). "</td>";
+                        echo "<tr id='user_row_" . $row['Id'] . "'>";
                         echo "<td>" .(isset($row['Name']) ? htmlspecialchars($row['Name']) : ''). "</td>";
                         echo "<td>" .(isset($row['Email']) ? htmlspecialchars($row['Email']) : ''). "</td>";
                         echo "<td>" .(isset($row['Password']) ? htmlspecialchars($row['Password']) : ''). "</td>";
-                        echo "<td><a href='delete.php?id=" . $row['Id'] . "' onclick='alertDelete'>Delete</a></td>";
+                        echo "<td>" .(isset($row['Address']) ? htmlspecialchars($row['Address']) : ''). "</td>";
+                        // echo "<td><a href='delete.php?id=" . $row['Id'] . "' onclick='alertDelete'>Delete</a></td>";
+                        echo "<td><a href='#' class='delete-link' data-id='" . $row['Id'] . "'>Delete</a></td>";
                         echo "</tr>";
                     }
                 }
