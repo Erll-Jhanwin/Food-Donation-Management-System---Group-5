@@ -43,43 +43,77 @@
 </head>
 <body>
 
+<header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><span>Food</span> Reports</div>
+                <nav>
+                    <ul>
+                        
+                        <li><a href="reports.php">Back</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
 <?php
-                    require_once 'dbConnection.php';
-                    require_once 'crudOperation.php';
+require_once 'dbConnection.php';
+require_once 'crudOperation.php';
 
-                    $database = new Database();
-                    $db = $database->getConnect();
+$database = new Database();
+$db = $database->getConnect();
 
-                    $user = new User($db);
-                    $stmt = $user->readForDonationOrderDate();
-                    $num = $stmt->rowCount();
+$user = new User($db);
+$stmt = $user->readForDonationOrderDate();
+$num = $stmt->rowCount();
 
-                    if($num > 0) {
-                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-                            echo "<tr>";
-                            //echo "<td>" .(isset($row['Id']) ? htmlspecialchars($row['Id']) : ''). "</td>";
-                            // echo "<td>" .(isset($row['FoodName']) ? htmlspecialchars($row['FoodName']) : ''). "</td>";
-                            // echo "<td>" .(isset($row['MealType']) ? htmlspecialchars($row['MealType']) : ''). "</td>";
-                            // echo "<td>" .(isset($row['FoodCategory']) ? htmlspecialchars($row['FoodCategory']) : ''). "</td>";
-                            // echo "<td>" .(isset($row['FoodQuantity']) ? htmlspecialchars($row['FoodQuantity']) : ''). "</td>";
-                            // echo "<td>" .(isset($row['DateToPickup']) ? htmlspecialchars($row['DateToPickup']) : ''). "</td>";
-                            // echo "<td>" .(isset($row['DonateDateCreation']) ? htmlspecialchars($row['DonateDateCreation']) : ''). "</td>";
-                            // echo "<td>" .(isset($row['Status']) ? htmlspecialchars($row['Status']) : ''). "</td>";
-                            // echo "<td><a href='delete.php?donation_id=" . $row['Id'] . "' id='". $row['Id'] ."'>Delete</a></td>";
-                            // echo "<td><a href='update.php?id=" . $row['Id'] . "' id='link'>Pick it up</a></td>";
-                            // echo "</tr>";
+if ($num > 0) {
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        echo "<div class='pickup p-3 m-5' id='donation_" . $row['Id'] . "'>
+                <p>FoodName: " . (isset($row['FoodName']) ? htmlspecialchars($row['FoodName']) : '') . "</p>
+                <p>FoodQuantity: " . (isset($row['FoodQuantity']) ? htmlspecialchars($row['FoodQuantity']) : '') . "</p>
+                <p>DateToPickup: " . (isset($row['DateToPickup']) ? htmlspecialchars($row['DateToPickup']) : '') . "</p>
+                <p>Status: " . (isset($row['Status']) ? htmlspecialchars($row['Status']) : '') . "</p>
+                <a href='#' class='pickup-link' data-id='" . $row['Id'] . "'>Pick it up</a>
+              </div>";
+    }
+}else{
+    echo "No Donations need to pick up";
+}
+?>
 
-                            echo "<div class='pickup p-3 m-5' id='".$row['Id']."'>
-                                <p>FoodName: " .(isset($row['FoodName']) ? htmlspecialchars($row['FoodName']) : ''). "</p>
-                                <p>FoodQuantity: " .(isset($row['FoodQuantity']) ? htmlspecialchars($row['FoodQuantity']) : ''). "</p>
-                                <p>DateToPickup: " .(isset($row['DateToPickup']) ? htmlspecialchars($row['DateToPickup']) : ''). "</p>
-                                <p>Status: " .(isset($row['Status']) ? htmlspecialchars($row['Status']) : ''). "</p>
-                                <a href='update.php?id=" . $row['Id'] . "' id='link'>Pick it up</a>
+<script>
+$(document).ready(function() {
+    // Attach click event to 'Pick it up' link
+    $('.pickup-link').click(function(e) {
+        e.preventDefault();
 
-                            </div>";
-                        }
-                    }
-                    ?>
+        // Get the donation ID from the data-id attribute
+        var donationId = $(this).data('id');
+
+        // Send AJAX request to update the status in the database
+        $.ajax({
+            url: 'update.php', // This is the PHP file to update the status
+            type: 'GET',
+            data: { id: donationId },
+            success: function(response) {
+                if (response === 'Success') {
+                    // If the update is successful, remove the donation div from the page
+                    $('#donation_' + donationId).fadeOut(500, function() {
+                        $(this).remove();
+                    });
+                } else {
+                    alert('Error occurred while picking up the donation.');
+                }
+            },
+            error: function() {
+                alert('There was an error with the request.');
+            }
+        });
+    });
+});
+</script>
 
 
     

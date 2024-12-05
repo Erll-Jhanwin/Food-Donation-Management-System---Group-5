@@ -45,17 +45,18 @@
                 <nav>
                     <ul>
                         <li><a href="dashboard.php">Home</a></li>
-                        <li><a href="reports.php">Reports</a></li>
-                        <li><a href="donate.php">Donate</a></li>
+                        <!-- <li><a href="reports.php">Reports</a></li> -->
+                        <!-- <li><a href="donate.php">Donate</a></li> -->
+                        <li><a href="userslist.php">See all the Users</a></li>
+                        <li><a href="donationsList.php">See all Donation</a></li>
+                        <li><a href="pickupDonation.php">Pickup Donation</a></li>
                     </ul>
                 </nav>
             </div>
         </div>
     </header>
 
-    <a href="userslist.php" class="btn btn-primary">See all the Users</a>
-    <a href="donationsList.php" class="btn btn-primary">See all Donation</a>
-    <a href="pickupDonation.php" class="btn btn-primary">Pickup Donation</a>
+    
     
     <!-- Food Donation Report -->
     <div class="report  w-100">
@@ -82,16 +83,10 @@
 
             <label for="year">Select Year:</label>
             <select name="year" id="year" class="form-control w-50">
+                <option value="2025">2025</option>
                 <option value="2024">2024</option>
                 <option value="2023">2023</option>
                 <option value="2022">2022</option>
-            </select><br>
-
-            <label for="meal">Meal-Type</label>
-            <select name="meal" id="meal" class="form-control w-50">
-                <option value="vegetables">vegetables</option>
-                <option value="non_vegetables">non_vegetables</option>
-                <option value="fruits">fruits</option>
             </select><br>
             <input type="submit" value="Generate Report" class="btn btn-primary">
         </form>
@@ -99,10 +94,9 @@
         <div class="table-report mb-5 p-3">
             <?php
             // Check if month and year are selected and display report
-            if (isset($_GET['month']) && isset($_GET['year']) && isset($_GET['meal'])) {
+            if (isset($_GET['month']) && isset($_GET['year'])) {
                 $month = $_GET['month'];
                 $year = $_GET['year'];
-                $meal = $_GET['meal'];
 
                 // Call the function to fetch donations for the selected month and year
                 require_once 'dbConnection.php';
@@ -112,22 +106,69 @@
                 $db = $database->getConnect();
 
                 $user = new User($db);
-                $stmt = $user->readDonationsByMonth($month, $year, $meal);
+                $stmt = $user->readDonationsByMonth($month, $year);
                 $num = $stmt->rowCount();
 
                 echo "<h3>Donations for " . date("F", mktime(0, 0, 0, $month, 10)) . " " . $year . ":</h3>";
+                $totalNum = $user->countDonated($month, $year);
+                $totalPickup = $user->countPickupByMonth($month, $year);
+
+                $result = $user->countMealTypeByMonth($month, $year);
+
 
                 if ($num > 0) {
+
+                    echo "<table class='table table-bordered'>
+                    <thead>
+                        <tr>
+                            <th colspan='2' style='text-align:center;background-color:#d1d1d1;'>Reports for this Month</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan='2'>The total accumulated donation for the month of ".date("F", mktime(0, 0, 0, $month, 10))." is ". $totalNum. "</td>
+                        </tr>
+                        <tr>
+                            <td colspan='2'>Number of donations that already picked up: ". $totalPickup . "</td>
+                        </tr>
+                    </tbody>
+
+                    <thead>
+                        <tr>
+                            <th colspan='2' style='text-align:center;background-color:#d1d1d1;'>Meal Type</th>
+                        </tr>
+                        <tr>
+                            <th>Category</th>
+                            <th>Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Vegetables</td>
+                            <td>".$result['vegetables']."</td>
+                        </tr>
+                        <tr>
+                            <td>Non-Vegetables</td>
+                            <td>".$result['nonvegetables']."</td>
+                        </tr>
+                        <tr>
+                            <td>Fruits</td>
+                            <td>".$result['fruits']."</td>
+                        </tr>
+                    </tbody>
+                </table><br><br>";
+
+
+
                     echo '<table id="userTable3" class="display">';
                     echo '<thead>';
                     echo '<tr>';
-                    echo '<th>ID</th>';
+                    // echo '<th>ID</th>';
                     echo '<th>Food Name</th>';
                     echo '<th>Meal Type</th>';
                     echo '<th>Food Category</th>';
                     echo '<th>Food Quantity</th>';
                     echo '<th>Date to Pickup</th>';
-                    echo '<th>DonateDateCreation</th>';
                     echo '<th>Status</th>';
                     echo '</tr>';
                     echo '</thead>';
@@ -135,13 +176,12 @@
 
                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
                         echo "<tr>";
-                        echo "<td>" . htmlspecialchars($row['Id']) . "</td>";
+                        // echo "<td>" . htmlspecialchars($row['Id']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['FoodName']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['MealType']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['FoodCategory']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['FoodQuantity']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['DateToPickup']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['DonateDateCreation']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['Status']) . "</td>";
                         echo "</tr>";
                     }
@@ -149,8 +189,7 @@
                     echo '</tbody>';
                     echo '</table>';
 
-                    $totalNum = $user->countDonated($month, $year);
-                    echo "<h4>The total accumulated donation for the month of ". date("F", mktime(0, 0, 0, $month, 10)) ." is ". $totalNum ."</h4>";
+                    
                 } else {
                 echo "<p>No donations found for the selected month and year.</p>";
                 }

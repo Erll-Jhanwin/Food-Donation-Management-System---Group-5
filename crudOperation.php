@@ -93,7 +93,7 @@ class User {
     }
 
     public function readForDonationOrderDate(){
-        $query = "SELECT * FROM " . $this->tbl_food . " ORDER BY DateToPickup ASC";
+        $query = "SELECT * FROM " . $this->tbl_food . " WHERE Status = 'To pickup' ORDER BY DateToPickup ASC";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt;
@@ -133,12 +133,11 @@ class User {
     }
 
     // Query donations for a specific month and year
-    public function readDonationsByMonth($month, $year, $meal){
-        $query = "SELECT * FROM " . $this->tbl_food . " WHERE MONTH(DonateDateCreation) = :month AND YEAR(DonateDateCreation) = :year AND MealType=:meal";
+    public function readDonationsByMonth($month, $year){
+        $query = "SELECT * FROM " . $this->tbl_food . " WHERE MONTH(DonateDateCreation) = :month AND YEAR(DonateDateCreation) = :year";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':month', $month, PDO::PARAM_INT);
         $stmt->bindParam(':year', $year, PDO::PARAM_INT);
-        $stmt->bindParam(':meal', $meal, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt;
     }
@@ -146,6 +145,16 @@ class User {
     //counting donated food
     public function countDonated($month, $year) {
         $query = "SELECT COUNT(*) FROM " . $this->tbl_food . " WHERE MONTH(DonateDateCreation) = :month AND YEAR(DonateDateCreation) = :year";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':month', $month, PDO::PARAM_INT);
+        $stmt->bindParam(':year', $year, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetchColumn();
+        return $result;
+    }
+
+    public function countPickupByMonth($month, $year) {
+        $query = "SELECT COUNT(*) FROM " . $this->tbl_food . " WHERE Status='Already picked up' AND MONTH(DonateDateCreation) = :month AND YEAR(DonateDateCreation) = :year";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':month', $month, PDO::PARAM_INT);
         $stmt->bindParam(':year', $year, PDO::PARAM_INT);
@@ -175,6 +184,46 @@ class User {
         $result = $stmt->fetchColumn();
         return $result;
     }
+
+    public function countMealTypeByMonth($month, $year) {
+        // First query: Count pickups for the given name and email
+        $query1 = "SELECT COUNT(*) FROM " . $this->tbl_food . " WHERE MealType='vegetables' AND MONTH(DonateDateCreation) = :month AND YEAR(DonateDateCreation) = :year";
+        $stmt1 = $this->conn->prepare($query1);
+        $stmt1->bindParam(':month', $month, PDO::PARAM_INT);
+        $stmt1->bindParam(':year', $year, PDO::PARAM_INT);
+        $stmt1->execute();
+        $vegetables = $stmt1->fetchColumn();
+        
+        $query2 = "SELECT COUNT(*) FROM " . $this->tbl_food . " WHERE MealType='non_vegetables' AND MONTH(DonateDateCreation) = :month AND YEAR(DonateDateCreation) = :year";
+        $stmt2 = $this->conn->prepare($query2);
+        $stmt2->bindParam(':month', $month, PDO::PARAM_INT);
+        $stmt2->bindParam(':year', $year, PDO::PARAM_INT);
+        $stmt2->execute();
+        $non_vegetables = $stmt2->fetchColumn();
+        
+        $query3 = "SELECT COUNT(*) FROM " . $this->tbl_food . " WHERE MealType='fruits' AND MONTH(DonateDateCreation) = :month AND YEAR(DonateDateCreation) = :year";
+        $stmt3 = $this->conn->prepare($query3);
+        $stmt3->bindParam(':month', $month, PDO::PARAM_INT);
+        $stmt3->bindParam(':year', $year, PDO::PARAM_INT);
+        $stmt3->execute();
+        $fruits = $stmt3->fetchColumn();
+        
+        // Returning the results as an associative array
+        return [
+            'vegetables' => $vegetables,
+            'nonvegetables' => $non_vegetables,
+            'fruits' => $fruits
+        ];
+    }
+    
+
+    // public function countPickupMonth() {
+    //     $query = "SELECT COUNT(*) FROM " . $this->tbl_food . " WHERE Status='Already picked up'";
+    //     $stmt = $this->conn->prepare($query);
+    //     $stmt->execute();
+    //     $result = $stmt->fetchColumn();
+    //     return $result;
+    // }
 
 
 

@@ -41,6 +41,19 @@
 
 </head>
 <body>
+<header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><span>Food</span> Reports</div>
+                <nav>
+                    <ul>
+                        
+                        <li><a href="reports.php">Back</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
 
     <!-- Table for User Registration -->
     <div class="tables m-5 p-3">
