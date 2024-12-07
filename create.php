@@ -59,11 +59,14 @@
         <script>
 
         Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Something went wrong!',
-            footer: '<a href='#'>Why do I have this issue?</a>'
-            });
+            title: 'Error!',
+            text: 'error',
+            icon: 'success'
+        }).then((result) => {
+            if(result.isConfirmed) {
+                window.location.href = 'index.php';
+            }
+        });
         </script>
         </body>
         </html> ";

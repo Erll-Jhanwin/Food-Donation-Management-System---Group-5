@@ -97,7 +97,7 @@ $user = new User($db);
                 <div class="logo"><span>Welcome</span> User</div>
                 <nav>
                     <ul>
-                    <li><a href="dashboard.php">Home</a></li>
+                    <!-- <li><a href="dashboard.php">Home</a></li> -->
                     <li><a href="donate.php">Donate</a></li>
                     </ul>
                 </nav>
@@ -153,9 +153,7 @@ $user = new User($db);
         <div class="head-title p-3">
             <p class="big">Your Donates</p>
         </div>
-        
         <br><br>
-
         <div class="p-3">
         <p class="big">List of food that you Donate</p>
             <table id="userTable" class="ui celled table" style="width:100%">
@@ -167,7 +165,7 @@ $user = new User($db);
                         <th>Food category</th>
                         <th>Food Quantity</th>
                         <th>Date to Pickup</th>
-                        <th>DonateDateCreation</th>
+                        <!-- <th>DonateDateCreation</th> -->
                         <th>Status</th>
                         <th colspan="3">Action</th>
                     </tr>
@@ -193,10 +191,10 @@ $user = new User($db);
                             echo "<td>" .(isset($row['FoodCategory']) ? htmlspecialchars($row['FoodCategory']) : ''). "</td>";
                             echo "<td>" .(isset($row['FoodQuantity']) ? htmlspecialchars($row['FoodQuantity']) : ''). "</td>";
                             echo "<td>" .(isset($row['DateToPickup']) ? htmlspecialchars($row['DateToPickup']) : ''). "</td>";
-                            echo "<td>" .(isset($row['DonateDateCreation']) ? htmlspecialchars($row['DonateDateCreation']) : ''). "</td>";
+                            // echo "<td>" .(isset($row['DonateDateCreation']) ? htmlspecialchars($row['DonateDateCreation']) : ''). "</td>";
                             echo "<td>" .(isset($row['Status']) ? htmlspecialchars($row['Status']) : ''). "</td>";
                             echo "<td><a href='delete.php?donation_id=" . $row['Id'] . "' id='". $row['Id'] ."'>Delete</a></td>";
-                            echo "<td><a href='update.php?id=" . $row['Id'] . "' id='link'>Pick it up</a></td>";
+                            // echo "<td><a href='update.php?id=" . $row['Id'] . "' id='link'>Pick it up</a></td>";
                             echo "</tr>";
                         }
                     }
@@ -207,6 +205,5 @@ $user = new User($db);
         </div>
     </div>
 
-    
 </body>
 </html>

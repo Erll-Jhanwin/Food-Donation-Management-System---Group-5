@@ -1,9 +1,13 @@
 <?php
 class User {
-    private $conn;
-    private $tbl_name = "usersdata";
-    private $tbl_food = "foods";
-    private $tbl_admin = "admin";
+    protected $conn; // Make sure this is public or protected to be accessible by child classes
+    protected $tbl_name = "usersdata"; 
+    protected $tbl_food = "foods"; 
+    protected $tbl_admin = "admin"; 
+
+    public function __construct($db) {
+        $this->conn = $db; // Assign the PDO connection to $this->conn
+    }
 
     //for registration
     public $id;
@@ -29,9 +33,9 @@ class User {
 
     
 
-    public function __construct($db) {
-        $this->conn = $db;
-    }
+    // public function __construct($db) {
+    //     $this->conn = $db;
+    // }
 
     //Query to insert user
     public function create() {
@@ -40,6 +44,9 @@ class User {
         $stmt->bindParam(':name', $this->name);
         $stmt->bindParam(':email', $this->email);
         $stmt->bindParam(':phoneNum', $this->phoneNum);
+
+        // $hashedPassword = password_hash($this->password, PASSWORD_DEFAULT);
+
         $stmt->bindParam(':password', $this->password);
         $stmt->bindParam(':address', $this->address);
 
@@ -48,6 +55,48 @@ class User {
         }
         return false;
     }
+
+    public function user_login($email, $password) {
+        // Query to find the user based on email
+        $query = "SELECT * FROM " . $this->tbl_name . " WHERE Email = :email";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        
+        // Check if a user is found
+        if ($stmt->rowCount() > 0) {
+            // Iterate through all rows (in case there are multiple users with the same email)
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $storedPassword = $row['Password'];
+                
+                // Verify the password (you can use password_hash if passwords are hashed)
+                if ($password == $storedPassword) {
+                    // Start the session and set session variables
+                    session_start();
+                    $_SESSION["email"] = $email;
+                    $_SESSION["phone"] = htmlspecialchars(trim($row['Phone']));
+                    $_SESSION["name"] = htmlspecialchars(trim($row['Name']));
+                    
+                    return true; // Login successful
+                }
+            }
+        }
+        
+        // If no user is found or password is incorrect
+        return false;
+    }
+    
+
+    
+
+     //retrieve data from the user table
+     public function read(){
+        $query = "SELECT * FROM " .$this->tbl_name;
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt;
+    }
+
 
     //Query to insert Donation
     public function createDonation() {
@@ -74,14 +123,7 @@ class User {
         return false;
     }
 
-    //retrieve data from the user table
-    public function read(){
-        $query = "SELECT * FROM " .$this->tbl_name;
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-        return $stmt;
-    }
-
+   
     
 
     //retrieve all the donations donation
@@ -92,6 +134,7 @@ class User {
         return $stmt;
     }
 
+    //retrieving all the donation to pickup order by date
     public function readForDonationOrderDate(){
         $query = "SELECT * FROM " . $this->tbl_food . " WHERE Status = 'To pickup' ORDER BY DateToPickup ASC";
         $stmt = $this->conn->prepare($query);
@@ -241,12 +284,12 @@ class User {
     }
 
     //retrieve data from the user table
-    public function readAdmin(){
-        $query = "SELECT * FROM " .$this->tbl_admin;
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-        return $stmt;
-    }
+    // public function readAdmin(){
+    //     $query = "SELECT * FROM " .$this->tbl_admin;
+    //     $stmt = $this->conn->prepare($query);
+    //     $stmt->execute();
+    //     return $stmt;
+    // }
 
 
    

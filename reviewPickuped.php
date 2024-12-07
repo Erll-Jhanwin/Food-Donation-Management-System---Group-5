@@ -12,7 +12,6 @@
     <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <!-- SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
     <!-- SweetAlert2 JS --> 
      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -42,7 +41,7 @@
 </head>
 <body>
 
-<header>
+    <header>
         <div class="container">
             <div class="header-content">
                 <div class="logo"><span>Food</span> Reports</div>
@@ -56,32 +55,32 @@
         </div>
     </header>
 
-<?php
-require_once 'dbConnection.php';
-require_once 'crudOperation.php';
+    <?php
+    require_once 'dbConnection.php';
+    require_once 'crudOperation.php';
 
-$database = new Database();
-$db = $database->getConnect();
+    $database = new Database();
+    $db = $database->getConnect();
 
-$user = new User($db);
-$stmt = $user->readPickup();
-$num = $stmt->rowCount();
+    $user = new User($db);
+    $stmt = $user->readPickup();
+    $num = $stmt->rowCount();
 
-if ($num > 0) {
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        echo "<div class='pickup p-4 m-5'>
-                <p>FoodName: " . (isset($row['FoodName']) ? htmlspecialchars($row['FoodName']) : '') . "</p>
-                <p>FoodQuantity: " . (isset($row['FoodQuantity']) ? htmlspecialchars($row['FoodQuantity']) : '') . "</p>
-                <p>DateToPickup: " . (isset($row['DateToPickup']) ? htmlspecialchars($row['DateToPickup']) : '') . "</p>
-                <p>Status: " . (isset($row['Status']) ? htmlspecialchars($row['Status']) : '') . "</p>
-                <p>Deliver To: " . (isset($row['DeliverTo']) ? htmlspecialchars($row['DeliverTo']) : '') . "</p>
-                <p class='btn btn-primary'>Already picked up</a>
-              </div>";
+    if ($num > 0) {
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            echo "<div class='pickup p-4 m-5'>
+                    <p>FoodName: " . (isset($row['FoodName']) ? htmlspecialchars($row['FoodName']) : '') . "</p>
+                    <p>FoodQuantity: " . (isset($row['FoodQuantity']) ? htmlspecialchars($row['FoodQuantity']) : '') . "</p>
+                    <p>DateToPickup: " . (isset($row['DateToPickup']) ? htmlspecialchars($row['DateToPickup']) : '') . "</p>
+                    <p>Status: " . (isset($row['Status']) ? htmlspecialchars($row['Status']) : '') . "</p>
+                    <p>Deliver To: " . (isset($row['DeliverTo']) ? htmlspecialchars($row['DeliverTo']) : '') . "</p>
+                    <p class='btn btn-primary'>Already picked up</a>
+                </div>";
+        }
+    }else{
+        echo "No Donations have pickup yet";
     }
-}else{
-    echo "No Donations have pickup yet";
-}
-?>
+    ?>
     
 </body>
 </html>

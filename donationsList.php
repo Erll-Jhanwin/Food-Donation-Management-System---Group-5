@@ -38,68 +38,61 @@
     </style>
 
     <script>
-        // $(document).ready(function() {
-        //     $('#userTable2').DataTable();
-        // });
-
     $(document).ready(function() {
     $('#userTable2').DataTable();
 
     // Handle delete link click
-    $('.delete-link').click(function(e) {
-        e.preventDefault();  // Prevent the default action (which is navigating to the URL)
+        $('.delete-link').click(function(e) {
+            e.preventDefault();  // Prevent the default action (which is navigating to the URL)
 
-        var donationId = $(this).data('id');  // Get the donation ID from the data-id attribute
+            var donationId = $(this).data('id');  // Get the donation ID from the data-id attribute
 
-        // Show a confirmation dialog using SweetAlert2
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Send AJAX request to delete the donation
-                $.ajax({
-                    url: 'delete.php',  // URL for the delete PHP file
-                    type: 'GET',
-                    data: { donation_id: donationId },  // Send the donation ID to the server
-                    success: function(response) {
-                        if (response === 'Success') {
-                            // If successful, remove the table row
-                            $('#donation_row_' + donationId).fadeOut(500, function() {
-                                $(this).remove();
-                            });
-                            Swal.fire('Deleted!', 'The donation has been deleted.', 'success');
-                        } else {
-                            Swal.fire('Error!', 'There was an issue deleting the donation.', 'error');
+            // Show a confirmation dialog using SweetAlert2
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Send AJAX request to delete the donation
+                    $.ajax({
+                        url: 'delete.php',  // URL for the delete PHP file
+                        type: 'GET',
+                        data: { donation_id: donationId },  // Send the donation ID to the server
+                        success: function(response) {
+                            if (response === 'Success') {
+                                // If successful, remove the table row
+                                $('#donation_row_' + donationId).fadeOut(500, function() {
+                                    $(this).remove();
+                                });
+                                Swal.fire('Deleted!', 'The donation has been deleted.', 'success');
+                            } else {
+                                Swal.fire('Error!', 'There was an issue deleting the donation.', 'error');
+                            }
+                        },
+                        error: function() {
+                            Swal.fire('Error!', 'There was an error with the request.', 'error');
                         }
-                    },
-                    error: function() {
-                        Swal.fire('Error!', 'There was an error with the request.', 'error');
-                    }
-                });
-            }
+                    });
+                }
+            });
         });
     });
-});
-
     </script>
 
 
 </head>
 <body>
-
-<header>
+    <header>
         <div class="container">
             <div class="header-content">
                 <div class="logo"><span>Food</span> Reports</div>
                 <nav>
                     <ul>
-                        
                         <li><a href="reports.php">Back</a></li>
                     </ul>
                 </nav>
@@ -152,9 +145,7 @@
                         echo "</tr>";
                     }
                 }
-
                 ?>
-    
             </tbody>
         </table>
     </div>
